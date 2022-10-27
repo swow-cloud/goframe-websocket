@@ -1,0 +1,66 @@
+2022-10-25 22:35:23.460 [INFO] {a8880a3a925621171901c626a0019f99} 用户[1231234434]注册成功
+2022-10-25 22:38:28.812 [INFO] {0000cf70bd56211734d35170e38851e1} 用户在【2022-10-25 22:38:28】[1231234424]注册成功
+2022-10-25 22:39:12.846 [INFO] {a03e83abc7562117866e3b0d1f4148f4} 用户在{1231234414}【2022-10-25 22:39:12】注册成功
+2022-10-25 22:39:40.827 [INFO] {200b0b30ce5621174aa0191d2d0117e3} 用户{1231234484}在【2022-10-25 22:39:40】注册成功
+2022-10-25 22:41:36.073 [INFO] {50ccb109e9562117258e626471efa316} 用户{12312344845555555}在【2022-10-25 22:41:36】注册成功
+2022-10-25 22:41:41.117 [ERRO] {78403a34ea562117268e6264d210ae9d} 用户{123123448455555556666666}在【2022-10-25 22:41:41】注册失败,失败原因【Error 1062: Duplicate entry '12312344845' for key 'user.uk_mobile', INSERT INTO `user`(`mobile`,`nickname`,`motto`,`email`,`created_at`,`updated_at`,`id`,`gender`,`password`,`is_robot`,`avatar`) VALUES('123123448455555556666666','何大帅','','','2022-10-25 22:41:41','2022-10-25 22:41:41',0,0,'41a60cb172508815010b77dfb78f1642',0,'') 】
+Stack:
+1.  goframe-websocket/internal/logic/user.(*SUser).Register.func1
+    /Users/heping/GolangWorkSpace/goframe-websocket/internal/logic/user/user.go:95
+2.  github.com/gogf/gf/v2/database/gdb.(*Core).Transaction
+    /Users/heping/go/pkg/mod/github.com/gogf/gf/v2@v2.2.0/database/gdb/gdb_core_transaction.go:108
+3.  goframe-websocket/internal/logic/user.(*SUser).Register
+    /Users/heping/GolangWorkSpace/goframe-websocket/internal/logic/user/user.go:77
+4.  goframe-websocket/internal/controller.(*cRegister).Register
+    /Users/heping/GolangWorkSpace/goframe-websocket/internal/controller/register.go:18
+5.  github.com/gogf/gf/v2/net/ghttp.(*middleware).callHandlerFunc.func1
+    /Users/heping/go/pkg/mod/github.com/gogf/gf/v2@v2.2.0/net/ghttp/ghttp_request_middleware.go:152
+6.  github.com/gogf/gf/v2/net/ghttp.niceCallFunc
+    /Users/heping/go/pkg/mod/github.com/gogf/gf/v2@v2.2.0/net/ghttp/ghttp_func.go:55
+7.  github.com/gogf/gf/v2/net/ghttp.(*middleware).callHandlerFunc
+    /Users/heping/go/pkg/mod/github.com/gogf/gf/v2@v2.2.0/net/ghttp/ghttp_request_middleware.go:129
+8.  github.com/gogf/gf/v2/net/ghttp.(*middleware).Next.func1
+    /Users/heping/go/pkg/mod/github.com/gogf/gf/v2@v2.2.0/net/ghttp/ghttp_request_middleware.go:75
+9.  github.com/gogf/gf/v2/util/gutil.TryCatch
+    /Users/heping/go/pkg/mod/github.com/gogf/gf/v2@v2.2.0/util/gutil/gutil.go:56
+10. github.com/gogf/gf/v2/net/ghttp.(*middleware).Next
+    /Users/heping/go/pkg/mod/github.com/gogf/gf/v2@v2.2.0/net/ghttp/ghttp_request_middleware.go:49
+11. goframe-websocket/internal/logic/middleware.(*sMiddleware).ResponseHandler
+    /Users/heping/GolangWorkSpace/goframe-websocket/internal/logic/middleware/middleware.go:23
+12. github.com/gogf/gf/v2/net/ghttp.(*middleware).Next.func1.1
+    /Users/heping/go/pkg/mod/github.com/gogf/gf/v2@v2.2.0/net/ghttp/ghttp_request_middleware.go:55
+13. github.com/gogf/gf/v2/net/ghttp.niceCallFunc
+    /Users/heping/go/pkg/mod/github.com/gogf/gf/v2@v2.2.0/net/ghttp/ghttp_func.go:55
+14. github.com/gogf/gf/v2/net/ghttp.(*middleware).Next.func1
+    /Users/heping/go/pkg/mod/github.com/gogf/gf/v2@v2.2.0/net/ghttp/ghttp_request_middleware.go:54
+15. github.com/gogf/gf/v2/util/gutil.TryCatch
+    /Users/heping/go/pkg/mod/github.com/gogf/gf/v2@v2.2.0/util/gutil/gutil.go:56
+16. github.com/gogf/gf/v2/net/ghttp.(*middleware).Next
+    /Users/heping/go/pkg/mod/github.com/gogf/gf/v2@v2.2.0/net/ghttp/ghttp_request_middleware.go:49
+17. goframe-websocket/internal/logic/middleware.(*sMiddleware).Ctx
+    /Users/heping/GolangWorkSpace/goframe-websocket/internal/logic/middleware/middleware.go:43
+18. github.com/gogf/gf/v2/net/ghttp.(*middleware).Next.func1.1
+    /Users/heping/go/pkg/mod/github.com/gogf/gf/v2@v2.2.0/net/ghttp/ghttp_request_middleware.go:55
+19. github.com/gogf/gf/v2/net/ghttp.niceCallFunc
+    /Users/heping/go/pkg/mod/github.com/gogf/gf/v2@v2.2.0/net/ghttp/ghttp_func.go:55
+20. github.com/gogf/gf/v2/net/ghttp.(*middleware).Next.func1
+    /Users/heping/go/pkg/mod/github.com/gogf/gf/v2@v2.2.0/net/ghttp/ghttp_request_middleware.go:54
+21. github.com/gogf/gf/v2/util/gutil.TryCatch
+    /Users/heping/go/pkg/mod/github.com/gogf/gf/v2@v2.2.0/util/gutil/gutil.go:56
+22. github.com/gogf/gf/v2/net/ghttp.(*middleware).Next
+    /Users/heping/go/pkg/mod/github.com/gogf/gf/v2@v2.2.0/net/ghttp/ghttp_request_middleware.go:49
+23. github.com/gogf/gf/v2/net/ghttp.internalMiddlewareServerTracing
+    /Users/heping/go/pkg/mod/github.com/gogf/gf/v2@v2.2.0/net/ghttp/ghttp_middleware_tracing.go:78
+24. github.com/gogf/gf/v2/net/ghttp.(*middleware).Next.func1.5
+    /Users/heping/go/pkg/mod/github.com/gogf/gf/v2@v2.2.0/net/ghttp/ghttp_request_middleware.go:96
+25. github.com/gogf/gf/v2/net/ghttp.niceCallFunc
+    /Users/heping/go/pkg/mod/github.com/gogf/gf/v2@v2.2.0/net/ghttp/ghttp_func.go:55
+26. github.com/gogf/gf/v2/net/ghttp.(*middleware).Next.func1
+    /Users/heping/go/pkg/mod/github.com/gogf/gf/v2@v2.2.0/net/ghttp/ghttp_request_middleware.go:95
+27. github.com/gogf/gf/v2/util/gutil.TryCatch
+    /Users/heping/go/pkg/mod/github.com/gogf/gf/v2@v2.2.0/util/gutil/gutil.go:56
+28. github.com/gogf/gf/v2/net/ghttp.(*middleware).Next
+    /Users/heping/go/pkg/mod/github.com/gogf/gf/v2@v2.2.0/net/ghttp/ghttp_request_middleware.go:49
+29. github.com/gogf/gf/v2/net/ghttp.(*Server).ServeHTTP
+    /Users/heping/go/pkg/mod/github.com/gogf/gf/v2@v2.2.0/net/ghttp/ghttp_server_handler.go:121
+
