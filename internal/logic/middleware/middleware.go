@@ -11,15 +11,15 @@ import (
 	"goframe-websocket/utility/utils"
 )
 
-type sMiddleware struct {
+type SMiddleware struct {
 }
 
-func (s *sMiddleware) Cors(request *ghttp.Request) {
+func (s *SMiddleware) Cors(request *ghttp.Request) {
 	request.Response.CORSDefault()
 	request.Middleware.Next()
 }
 
-func (s *sMiddleware) ResponseHandler(request *ghttp.Request) {
+func (s *SMiddleware) ResponseHandler(request *ghttp.Request) {
 	request.Middleware.Next()
 	if request.Response.BufferLength() > 0 {
 		return
@@ -39,11 +39,11 @@ func (s *sMiddleware) ResponseHandler(request *ghttp.Request) {
 	}
 }
 
-func (s *sMiddleware) Ctx(request *ghttp.Request) {
+func (s *SMiddleware) Ctx(request *ghttp.Request) {
 	request.Middleware.Next()
 }
 
-func (s *sMiddleware) Auth(request *ghttp.Request) {
+func (s *SMiddleware) Auth(request *ghttp.Request) {
 	service.Auth().MiddlewareFunc()(request)
 	request.Middleware.Next()
 }
@@ -53,6 +53,6 @@ func init() {
 	service.RegisterMiddleware(middleware)
 }
 
-func NewMiddleware() *sMiddleware {
-	return &sMiddleware{}
+func NewMiddleware() *SMiddleware {
+	return &SMiddleware{}
 }
