@@ -5,6 +5,7 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
 	"goframe-websocket/internal/model"
+	"goframe-websocket/internal/service"
 )
 
 type SBizCtx struct {
@@ -16,6 +17,7 @@ func (s *SBizCtx) SetData(ctx context.Context, data g.Map) {
 }
 
 func init() {
+	service.RegisterBizCtx(New())
 }
 
 func New() *SBizCtx {

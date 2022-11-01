@@ -104,12 +104,18 @@ func Authenticator(ctx context.Context) (interface{}, error) {
 		return "", err
 	}
 	if user, _ := User().GetUserByMobileAndPassword(ctx, in.Mobile, in.Password); user != nil {
+		//TODO 设置上下文 2022-11-01
+		BizCtx().SetUser(ctx, &model.ContextUser{
+			Id:       user.Id,
+			Mobile:   user.Mobile,
+			Nickname: user.Nickname,
+			Avatar:   user.Avatar,
+		})
 		return g.Map{
 			"id":     user.Id,
 			"mobile": user.Mobile,
 		}, nil
 	}
-	//TODO 设置上下文 2022-11-01
 
 	return nil, jwt.ErrFailedAuthentication
 }
