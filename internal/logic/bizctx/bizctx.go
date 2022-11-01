@@ -2,8 +2,10 @@ package bizctx
 
 import (
 	"context"
+
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
+
 	"goframe-websocket/internal/model"
 	"goframe-websocket/internal/service"
 )
@@ -12,8 +14,7 @@ type SBizCtx struct {
 }
 
 func (s *SBizCtx) SetData(ctx context.Context, data g.Map) {
-	//TODO implement me
-	panic("implement me")
+	s.Get(ctx).Data = data
 }
 
 func init() {

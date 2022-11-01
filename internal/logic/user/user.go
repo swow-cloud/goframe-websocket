@@ -72,8 +72,8 @@ func (s *SUser) Login(ctx context.Context, in model.UserLoginInput) (token *mode
 }
 
 func (s *SUser) Logout(ctx context.Context) error {
-	//TODO 待实现退出 2022-10-26
-	panic("logout")
+	service.Auth().LogoutHandler(ctx)
+	return nil
 }
 
 // GetUserByMobileAndPassword 根据账号和密码查询用户信息，一般用于账号密码登录。

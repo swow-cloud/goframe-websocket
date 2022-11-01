@@ -5,6 +5,8 @@ import (
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
+	"github.com/gogf/gf/v2/util/gconv"
+
 	"goframe-websocket/internal/model"
 
 	"goframe-websocket/internal/consts"
@@ -47,12 +49,30 @@ func (s *SMiddleware) Ctx(request *ghttp.Request) {
 		Data: make(g.Map),
 	}
 	service.BizCtx().Init(request, &customCtx)
-	//TODO 存储上下文
 	request.Middleware.Next()
 }
 
 func (s *SMiddleware) Auth(request *ghttp.Request) {
 	service.Auth().MiddlewareFunc()(request)
+	ctx := request.GetCtx()
+	id := gconv.Int(service.Auth().GetIdentity(ctx))
+	userInfo, err := service.User().GetUserInfo(ctx, uint(id))
+	if err != nil {
+		g.Log().Error(ctx, "用户不存在!")
+		request.Response.ClearBuffer()
+		request.Response.WriteJson(response.JsonRes{
+			Code:    -1,
+			Message: "用户不存在",
+		})
+	}
+	//进行鉴权的时候设置用户上下文信息
+	service.BizCtx().SetUser(ctx, &model.ContextUser{
+		Id:       userInfo.Id,
+		Mobile:   userInfo.Mobile,
+		Nickname: userInfo.Nickname,
+		Avatar:   userInfo.Avatar,
+	})
+
 	request.Middleware.Next()
 }
 

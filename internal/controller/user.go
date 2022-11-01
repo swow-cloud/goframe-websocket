@@ -3,8 +3,6 @@ package controller
 import (
 	"context"
 
-	"github.com/gogf/gf/v2/util/gconv"
-
 	v1 "goframe-websocket/api/v1"
 	"goframe-websocket/internal/service"
 )
@@ -15,15 +13,14 @@ type cUser struct {
 }
 
 func (c *cUser) Info(ctx context.Context, req *v1.UserGetInfoReq) (res *v1.UserGetInfoRes, err error) {
-	id := gconv.Int(service.Auth().GetIdentity(ctx))
+	contextUser := service.BizCtx().Get(ctx).User
 	res = &v1.UserGetInfoRes{}
-	userInfo, err := service.User().GetUserInfo(ctx, uint(id))
 	if err != nil {
 		return nil, err
 	}
-	if userInfo != nil {
-		res.Mobile = userInfo.Mobile
-		res.Id = userInfo.Id
+	if contextUser != nil {
+		res.Mobile = contextUser.Mobile
+		res.Id = contextUser.Id
 	}
 	return res, nil
 }
