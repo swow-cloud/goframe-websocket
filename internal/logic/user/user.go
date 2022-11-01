@@ -61,6 +61,13 @@ func (s *SUser) Login(ctx context.Context, in model.UserLoginInput) (token *mode
 	g.Log().Info(ctx, fmt.Sprintf("用户{%s}在【%s】登录成功", userEntity.Mobile, gtime.Datetime()))
 	token = &model.UserToken{}
 	token.Token, token.ExpireIn = service.Auth().LoginHandler(ctx)
+	//设置上下文
+	service.BizCtx().SetUser(ctx, &model.ContextUser{
+		Id:       userEntity.Id,
+		Mobile:   userEntity.Mobile,
+		Nickname: userEntity.Nickname,
+		Avatar:   userEntity.Avatar,
+	})
 	return
 }
 

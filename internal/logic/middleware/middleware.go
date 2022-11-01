@@ -3,7 +3,9 @@ package middleware
 import (
 	"github.com/gogf/gf/v2/errors/gcode"
 	"github.com/gogf/gf/v2/errors/gerror"
+	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
+	"goframe-websocket/internal/model"
 
 	"goframe-websocket/internal/consts"
 	"goframe-websocket/internal/service"
@@ -40,6 +42,12 @@ func (s *SMiddleware) ResponseHandler(request *ghttp.Request) {
 }
 
 func (s *SMiddleware) Ctx(request *ghttp.Request) {
+	//初始化
+	customCtx := model.Context{
+		Data: make(g.Map),
+	}
+	service.BizCtx().Init(request, &customCtx)
+	//TODO 存储上下文
 	request.Middleware.Next()
 }
 

@@ -109,6 +109,7 @@ func Authenticator(ctx context.Context) (interface{}, error) {
 			"mobile": user.Mobile,
 		}, nil
 	}
+	//TODO 设置上下文 2022-11-01
 
 	return nil, jwt.ErrFailedAuthentication
 }
