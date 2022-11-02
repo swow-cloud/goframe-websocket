@@ -60,7 +60,7 @@ func (s *SMiddleware) Auth(request *ghttp.Request) {
 	if err != nil {
 		g.Log().Error(ctx, "用户不存在!")
 		request.Response.ClearBuffer()
-		request.Response.WriteJson(response.JsonRes{
+		request.Response.WriteJsonExit(response.JsonRes{
 			Code:    -1,
 			Message: "用户不存在",
 		})
