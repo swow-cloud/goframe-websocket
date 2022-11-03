@@ -20,7 +20,7 @@ const (
 
 type login struct {
 	UserId uint64
-	Client int
+	Client *Client
 }
 
 type Client struct {
