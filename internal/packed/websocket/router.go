@@ -29,17 +29,21 @@ func Process(client *Client, message []byte) {
 	if err != nil {
 		g.Log().Error(client.context, "数据解析失败 ", err)
 	}
-	//TODO 2022-11-02 待处理controller逻辑
 	switch request.Event {
 	case Login:
+		LoginController(client, request)
 		break
 	case Join:
+		JoinController(client, request)
 		break
 	case Quit:
+		QuitController(client, request)
 		break
 	case IsApp:
+		IsAppController(client)
 		break
 	case Ping:
+		PingController(client)
 		break
 	default:
 		fmt.Println("Unknown Event")

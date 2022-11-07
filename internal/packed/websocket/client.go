@@ -2,7 +2,6 @@ package websocket
 
 import (
 	"context"
-	"fmt"
 	"runtime/debug"
 
 	"github.com/gogf/gf/v2/container/garray"
@@ -15,7 +14,7 @@ import (
 
 const (
 	//心跳超时时间
-	heartbeatExpirationTime int = 6 * 60
+	heartbeatExpirationTime uint64 = 6 * 60
 )
 
 type login struct {
@@ -33,7 +32,7 @@ type Client struct {
 	FirstTime     uint64                 //首次连接时间
 	HeartbeatTime uint64                 //用户上次心跳时间
 	LoginTime     uint64                 //登录时间
-	IsApp         bool                   //是否是APP
+	isApp         bool                   //是否是APP
 	tags          garray.StrArray        //标签
 	context       context.Context        //自定义上下文
 }
@@ -54,7 +53,7 @@ func NewClient(ctx context.Context, addr string, socket *websocket.Conn, firstTi
 func (c *Client) read() {
 	defer func() {
 		if r := recover(); r != nil {
-			g.Log().Error(c.context, "write stop", string(debug.Stack()), r)
+			g.Log().Error(c.context, "read stop", string(debug.Stack()), r)
 		}
 	}()
 	defer func() {
@@ -65,10 +64,43 @@ func (c *Client) read() {
 		if err != nil {
 			return
 		}
-		fmt.Println(message)
-		//TODO 2022-11-02
+		g.Dump(message)
 		Process(c, message)
 	}
+}
+
+func (c *Client) write() {
+	defer func() {
+		if r := recover(); r != nil {
+			g.Log().Error(c.context, "write stop", string(debug.Stack()), r)
+		}
+		defer func() {
+			clientManager.Unregister <- c
+			_ = c.Socket.Close()
+		}()
+		for {
+			select {
+			case message, ok := <-c.Send:
+				if !ok {
+					//NOTE 发送了错误数据 关闭连接
+					return
+				}
+				_ = c.Socket.WriteJSON(message)
+			}
+		}
+	}()
+}
+
+func (c *Client) SendMsg(msg *model.WsResponse) {
+	if c == nil || c.SendCLose {
+		return
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			g.Log().Error(c.context, "SendMsg stop", string(debug.Stack()), r)
+		}
+	}()
+	c.Send <- msg
 }
 
 func (c *Client) close() {
@@ -77,4 +109,18 @@ func (c *Client) close() {
 	}
 	c.SendCLose = true
 	close(c.Send)
+}
+
+// HeartBeat  发送心跳
+func (c *Client) HeartBeat(currentTime uint64) {
+	c.HeartbeatTime = currentTime
+	return
+}
+
+// IsHeartbeatTimeout 心跳是否超时
+func (c *Client) IsHeartbeatTimeout(currentTime uint64) (timeout bool) {
+	if c.HeartbeatTime+heartbeatExpirationTime <= currentTime {
+		timeout = true
+	}
+	return
 }
