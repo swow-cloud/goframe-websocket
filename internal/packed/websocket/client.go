@@ -22,6 +22,11 @@ type login struct {
 	Client *Client
 }
 
+func (l *login) GetKey() (key string) {
+	key = GetUserKey(l.UserId)
+	return
+}
+
 type Client struct {
 	Addr          string                 //客户端地址
 	ID            string                 //连接唯一标识
