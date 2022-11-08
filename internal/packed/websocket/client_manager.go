@@ -1,27 +1,30 @@
 package websocket
 
 import (
+	"context"
 	"fmt"
 	"sync"
 
 	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/os/gcron"
+	"github.com/gogf/gf/v2/os/gtime"
 
 	"goframe-websocket/internal/model"
 )
 
 // ClientManager 客户端管理
 type ClientManager struct {
-	Clients         map[*Client]bool           //全部的连接
-	ClientsLock     sync.RWMutex               //读写锁
-	Users           map[string]*Client         //登录的用户 //uuid
-	UserLock        sync.RWMutex               //读写锁
-	Register        chan *Client               //连接处理
-	Login           chan *login                //用户登录处理
-	Unregister      chan *Client               //断开连接处理
-	Broadcast       chan *model.WsResponse     //广播 向全部成员发送数据
-	ClientBroadcast chan *model.WsResponse     //广播 向某个客户端发送数据
-	TagBroadcast    chan *model.TagWsResponse  //广播 向某个标签成员发送数据
-	UserBroadcast   chan *model.UserWsResponse //广播 向某个用户的所有连接发送数据
+	Clients         map[*Client]bool             //全部的连接
+	ClientsLock     sync.RWMutex                 //读写锁
+	Users           map[string]*Client           //登录的用户 //uuid
+	UserLock        sync.RWMutex                 //读写锁
+	Register        chan *Client                 //连接处理
+	Login           chan *login                  //用户登录处理
+	Unregister      chan *Client                 //断开连接处理
+	Broadcast       chan *model.WsResponse       //广播 向全部成员发送数据
+	ClientBroadcast chan *model.ClientWsResponse //广播 向某个客户端发送数据
+	TagBroadcast    chan *model.TagWsResponse    //广播 向某个标签成员发送数据
+	UserBroadcast   chan *model.UserWsResponse   //广播 向某个用户的所有连接发送数据
 }
 
 func NewClientManager() *ClientManager {
@@ -168,6 +171,115 @@ func (manager *ClientManager) EventUnregister(client *Client) {
 	close(client.Send)
 }
 
+// ClearTimeoutConnections 定时清理超时连接
 func (manager *ClientManager) ClearTimeoutConnections() {
 	//TODO 2022-10-07
+	currentTime := uint64(gtime.Now().Unix())
+	clients := clientManager.GetClients()
+	for client := range clients {
+		if client.IsHeartbeatTimeout(currentTime) {
+			//断开连接
+			_ = client.Socket.Close()
+		}
+	}
+}
+
+func (manager *ClientManager) ping(ctx context.Context) {
+	//通过定时任务，发送心跳
+	_, _ = gcron.Add(ctx, "0 */1 * * * *", func(ctx context.Context) {
+		res := &model.WsResponse{
+			Event: Ping,
+			Data:  g.Map{},
+		}
+		sendToAll(res)
+	})
+
+	//定时任务，清理超时连接
+	_, _ = gcron.Add(ctx, "0 */30 * * * *", func(ctx context.Context) {
+		manager.ClearTimeoutConnections()
+	})
+
+}
+
+func (manager *ClientManager) start() {
+	for {
+		select {
+		case conn := <-manager.Register:
+			//用户建立连接
+			manager.EventRegister(conn)
+			break
+		case login := <-manager.Login:
+			//用户登录事件
+			manager.EventLogin(login)
+			break
+		case conn := <-manager.Unregister:
+			//断开连接时间
+			manager.EventUnregister(conn)
+			break
+		case message := <-manager.Broadcast:
+			//全部客户端广播事件
+			clients := manager.GetClients()
+			for client := range clients {
+				client.SendMsg(message)
+			}
+			break
+		case message := <-manager.TagBroadcast:
+			//标签广播事件
+			clients := manager.GetClients()
+			for client := range clients {
+				client.SendMsg(message.WsResponse)
+			}
+			break
+		case message := <-manager.UserBroadcast:
+			//用户广播事件
+			clients := manager.GetClients()
+			for client := range clients {
+				if client.UserId == message.UserID {
+					client.SendMsg(message.WsResponse)
+				}
+			}
+			break
+		case message := <-manager.ClientBroadcast:
+			clients := manager.GetClients()
+			// 单个客户端广播事件
+			for client := range clients {
+				if client.ID == message.ID {
+					client.SendMsg(message.WsResponse)
+				}
+			}
+			break
+		}
+	}
+}
+
+//sendToAll  发送全部客户端
+func sendToAll(response *model.WsResponse) {
+	clientManager.Broadcast <- response
+}
+
+// SendToClientID 发送到指定客户端
+func SendToClientID(id string, response *model.WsResponse) {
+	clientRes := &model.ClientWsResponse{
+		ID:         id,
+		WsResponse: response,
+	}
+	clientManager.ClientBroadcast <- clientRes
+}
+
+// SendToUser 发送到指定用户
+func SendToUser(userID uint64, response *model.WsResponse) {
+	userRes := &model.UserWsResponse{
+		UserID:     userID,
+		WsResponse: response,
+	}
+	clientManager.UserBroadcast <- userRes
+}
+
+// SendToTag 发送标签
+func SendToTag(tag string, response *model.WsResponse) {
+	tagRes := &model.TagWsResponse{
+		Tag:        tag,
+		WsResponse: response,
+	}
+	clientManager.TagBroadcast <- tagRes
 }

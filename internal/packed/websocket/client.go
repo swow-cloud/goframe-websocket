@@ -79,21 +79,21 @@ func (c *Client) write() {
 		if r := recover(); r != nil {
 			g.Log().Error(c.context, "write stop", string(debug.Stack()), r)
 		}
-		defer func() {
-			clientManager.Unregister <- c
-			_ = c.Socket.Close()
-		}()
-		for {
-			select {
-			case message, ok := <-c.Send:
-				if !ok {
-					//NOTE 发送了错误数据 关闭连接
-					return
-				}
-				_ = c.Socket.WriteJSON(message)
-			}
-		}
 	}()
+	defer func() {
+		clientManager.Unregister <- c
+		_ = c.Socket.Close()
+	}()
+	for {
+		select {
+		case message, ok := <-c.Send:
+			if !ok {
+				//NOTE 发送了错误数据 关闭连接
+				return
+			}
+			_ = c.Socket.WriteJSON(message)
+		}
+	}
 }
 
 func (c *Client) SendMsg(msg *model.WsResponse) {

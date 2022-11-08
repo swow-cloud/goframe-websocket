@@ -9,6 +9,7 @@ import (
 	"github.com/gogf/gf/v2/os/gfile"
 
 	"goframe-websocket/internal/controller"
+	"goframe-websocket/internal/packed/websocket"
 	"goframe-websocket/internal/service"
 )
 
@@ -19,6 +20,9 @@ var (
 		Brief: "start http server",
 		Func: func(ctx context.Context, parser *gcmd.Parser) (err error) {
 			s := g.Server()
+			//启动服务
+			websocket.StartWebsocket(ctx)
+
 			s.Group("/", func(group *ghttp.RouterGroup) {
 				group.Middleware(
 					service.Middleware().Ctx,
@@ -31,30 +35,13 @@ var (
 				)
 				// Special handler that needs authentication.
 				group.Group("/", func(group *ghttp.RouterGroup) {
-					group.Middleware(service.Middleware().Auth)
+					//group.Middleware(service.Middleware().Auth)
 					group.ALLMap(g.Map{
 						"/user/info": controller.User.Info,
 					})
-					group.ALL("/ws", 1)
 				})
+				group.ALL("/ws", websocket.WsHandler)
 			})
-			//s.BindHandler("/ws", func(r *ghttp.Request) {
-			//	var ctx = r.Context()
-			//	ws, err := r.WebSocket()
-			//	if err != nil {
-			//		glog.Error(ctx, err)
-			//		r.Exit()
-			//	}
-			//	for {
-			//		msgType, msg, err := ws.ReadMessage()
-			//		if err != nil {
-			//			return
-			//		}
-			//		if err = ws.WriteMessage(msgType, msg); err != nil {
-			//			return
-			//		}
-			//	}
-			//})
 			s.SetServerRoot(gfile.MainPkgPath())
 			s.SetPort(8199)
 			s.Run()

@@ -24,6 +24,8 @@ var upGrader = websocket.Upgrader{
 
 func StartWebsocket(ctx context.Context) {
 	g.Log().Info(ctx, "启动: WebSocket")
+	go clientManager.start()
+	go clientManager.ping(ctx)
 
 }
 
