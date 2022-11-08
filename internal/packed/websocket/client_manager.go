@@ -33,6 +33,7 @@ func NewClientManager() *ClientManager {
 		Users:         make(map[string]*Client),
 		Register:      make(chan *Client, 1000),
 		Unregister:    make(chan *Client, 1000),
+		Login:         make(chan *login, 1000),
 		Broadcast:     make(chan *model.WsResponse, 1000),
 		TagBroadcast:  make(chan *model.TagWsResponse, 1000),
 		UserBroadcast: make(chan *model.UserWsResponse, 1000),
@@ -48,7 +49,7 @@ func GetUserKey(userId uint64) string {
 // InClient 客户端是否存在
 func (manager *ClientManager) InClient(client *Client) (ok bool) {
 	manager.ClientsLock.RLock()
-	defer manager.ClientsLock.Unlock()
+	defer manager.ClientsLock.RUnlock()
 	_, ok = manager.Clients[client]
 	return
 }

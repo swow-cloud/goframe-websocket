@@ -69,7 +69,6 @@ func (c *Client) read() {
 		if err != nil {
 			return
 		}
-		g.Dump(message)
 		Process(c, message)
 	}
 }
