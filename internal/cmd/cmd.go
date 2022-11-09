@@ -35,12 +35,13 @@ var (
 				)
 				// Special handler that needs authentication.
 				group.Group("/", func(group *ghttp.RouterGroup) {
-					//group.Middleware(service.Middleware().Auth)
+					group.Middleware(service.Middleware().Auth)
 					group.ALLMap(g.Map{
 						"/user/info": controller.User.Info,
 					})
+					group.ALL("/ws", websocket.WsHandler)
 				})
-				group.ALL("/ws", websocket.WsHandler)
+
 			})
 			s.SetServerRoot(gfile.MainPkgPath())
 			s.SetPort(8199)
