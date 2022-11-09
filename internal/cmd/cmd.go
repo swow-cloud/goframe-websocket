@@ -30,15 +30,21 @@ var (
 				)
 				group.Bind(
 					controller.Hello,
+				)
+				// /sys/user
+				sysGroup := group.Group("/sys/user")
+				sysGroup.Bind(
 					controller.Login,
 					controller.Register,
 				)
-				// Special handler that needs authentication.
-				group.Group("/", func(group *ghttp.RouterGroup) {
+				sysGroup.Group("/", func(group *ghttp.RouterGroup) {
 					group.Middleware(service.Middleware().Auth)
 					group.ALLMap(g.Map{
 						"/user/info": controller.User.Info,
 					})
+				})
+				// Special handler that needs authentication.
+				group.Group("/", func(group *ghttp.RouterGroup) {
 					group.ALL("/ws", websocket.WsHandler)
 				})
 

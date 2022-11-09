@@ -17,8 +17,8 @@ func LoginController(client *Client, req *model.WsRequest) {
 	}
 	clientManager.Login <- login
 	client.SendMsg(&model.WsResponse{
-		Event: Login,
-		Data:  "success",
+		Event:   Login,
+		Content: "success",
 	})
 }
 
@@ -28,25 +28,25 @@ func IsAppController(client *Client) {
 
 // JoinController 加入
 func JoinController(client *Client, req *model.WsRequest) {
-	name := gconv.String(req.Data["name"])
+	name := gconv.String(req.Content["name"])
 	if !client.tags.Contains(name) {
 		client.tags.Append(name)
 	}
 	client.SendMsg(&model.WsResponse{
-		Event: Join,
-		Data:  client.tags.Slice(),
+		Event:   Join,
+		Content: client.tags.Slice(),
 	})
 
 }
 
 func QuitController(client *Client, request *model.WsRequest) {
-	name := gconv.String(request.Data["name"])
+	name := gconv.String(request.Content["name"])
 	if client.tags.Contains(name) {
 		client.tags.RemoveValue(name)
 	}
 	client.SendMsg(&model.WsResponse{
-		Event: Quit,
-		Data:  client.tags.Slice(),
+		Event:   Quit,
+		Content: client.tags.Slice(),
 	})
 }
 func PingController(client *Client) {

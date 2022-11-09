@@ -143,7 +143,7 @@ func (manager *ClientManager) EventRegister(client *Client) {
 	//发送当前客户端ID
 	client.SendMsg(&model.WsResponse{
 		Event: "connected",
-		Data: g.Map{
+		Content: g.Map{
 			"ID": client.ID,
 		},
 	})
@@ -189,8 +189,8 @@ func (manager *ClientManager) ping(ctx context.Context) {
 	//通过定时任务，发送心跳
 	_, _ = gcron.Add(ctx, "0 */1 * * * *", func(ctx context.Context) {
 		res := &model.WsResponse{
-			Event: Ping,
-			Data:  g.Map{},
+			Event:   Ping,
+			Content: g.Map{},
 		}
 		sendToAll(res)
 	})

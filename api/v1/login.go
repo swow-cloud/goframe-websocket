@@ -1,8 +1,6 @@
 package v1
 
 import (
-	"time"
-
 	"github.com/gogf/gf/v2/frame/g"
 )
 
@@ -13,6 +11,6 @@ type LoginReq struct {
 }
 
 type LoginDoRes struct {
-	Token    string    `json:"token"`
-	ExpireIn time.Time `json:"expireIn"`
+	Token    string `json:"token"`
+	ExpireIn string `json:"expireIn"`
 }
