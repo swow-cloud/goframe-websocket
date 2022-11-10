@@ -36,6 +36,7 @@ var (
 				sysGroup.Bind(
 					controller.Login,
 					controller.Register,
+					controller.Sms,
 				)
 				sysGroup.Group("/", func(group *ghttp.RouterGroup) {
 					group.Middleware(service.Middleware().Auth)

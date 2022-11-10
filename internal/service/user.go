@@ -14,6 +14,7 @@ type IUser interface {
 	Register(ctx context.Context, in model.UserRegisterInput) (bool, error)
 	CheckMobileUniq(ctx context.Context, mobile string) error
 	GetUserInfo(ctx context.Context, id uint) (*entity.User, error)
+	ExistMobile(ctx context.Context, mobile string) (bool, error)
 }
 
 var localUser IUser

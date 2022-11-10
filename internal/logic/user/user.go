@@ -124,3 +124,15 @@ func (s *SUser) Register(ctx context.Context, in model.UserRegisterInput) (bool,
 	}
 	return true, nil
 }
+
+func (s *SUser) ExistMobile(ctx context.Context, mobile string) (bool, error) {
+	var user *entity.User
+	err := dao.User.Ctx(ctx).Where("mobile", mobile).Scan(&user)
+	if err != nil {
+		return false, err
+	}
+	if user != nil {
+		return true, nil
+	}
+	return false, nil
+}

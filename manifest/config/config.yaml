@@ -38,5 +38,11 @@ jwt:
 app:
   secret: "Dl2I3ii21tP4XQwP"
 
+redis:
+  # 单实例配置示例1
+  default:
+    address: 127.0.0.1:6379
+    db:      1
+
 
 

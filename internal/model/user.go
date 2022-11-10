@@ -18,8 +18,15 @@ type UserRegisterInput struct {
 	Nickname string
 }
 
-type SmsSendInput struct {
-	Mobile string
+// SmsCodeInput 短信验证码
+type SmsCodeInput struct {
+	Mobile  string
+	Channel string
+}
+
+type SmsSend struct {
+	Type string
+	Code string
 }
 
 type UserToken struct {
