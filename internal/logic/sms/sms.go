@@ -48,9 +48,8 @@ func (S SSms) SetCode(ctx context.Context, key string, code string, exp uint) {
 	panic("implement me")
 }
 
-func (S SSms) DelCode(ctx context.Context, usage string, key string) {
-	//TODO implement me
-	panic("implement me")
+func (S SSms) DelCode(ctx context.Context, channel string, key string) {
+	_, _ = g.Redis().Do(ctx, "DEL", getSmsKey(channel, key))
 }
 
 func init() {

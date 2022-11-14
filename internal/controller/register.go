@@ -31,6 +31,7 @@ func (c *cRegister) Register(ctx context.Context, req *v1.RegisterDoReq) (res *v
 	if err != nil {
 		return nil, err
 	}
+	service.Sms().DelCode(ctx, consts.SmsRegister, req.Mobile)
 	res.IsRegister = true
 	return
 }
