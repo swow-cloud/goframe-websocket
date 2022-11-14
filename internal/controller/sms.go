@@ -16,6 +16,7 @@ var Sms = cSms{}
 type cSms struct {
 }
 
+// SmsCode https://github.com/rookie-ninja/rk-gf Note 可以使用限流
 func (c *cSms) SmsCode(ctx context.Context, r *v1.SmsCodeReq) (res *v1.SmsCodeRes, err error) {
 
 	channel := r.Channel

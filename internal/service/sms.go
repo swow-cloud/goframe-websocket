@@ -11,7 +11,7 @@ type ISms interface {
 	GetCode(ctx context.Context, key string) string
 	SetCode(ctx context.Context, key string, code string, exp uint)
 	DelCode(ctx context.Context, usage string, key string)
-	Check(ctx context.Context, category string, key string, code string) bool
+	Check(ctx context.Context, channel string, key string, code string) bool
 }
 
 var localSms ISms

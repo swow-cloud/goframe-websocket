@@ -15,9 +15,8 @@ import (
 type SSms struct {
 }
 
-func (S SSms) Check(ctx context.Context, category string, key string, code string) bool {
-	//TODO implement me
-	panic("implement me")
+func (S SSms) Check(ctx context.Context, channel string, key string, code string) bool {
+	return S.GetCode(ctx, getSmsKey(channel, key)) == code
 }
 
 func (S SSms) Send(ctx context.Context, input model.SmsCodeInput) (*model.SmsSend, error) {
@@ -60,15 +59,16 @@ func init() {
 }
 
 //获取短信key
-func getSmsKey(category string, mobile string) string {
-	return fmt.Sprintf("sms_code:{%s}:{%s}", category, mobile)
+func getSmsKey(channel string, mobile string) string {
+	return fmt.Sprintf("sms_code:{%s}:{%s}", channel, mobile)
 }
 
-func (S SSms) filter(category string, mobile string) (bool, string) {
+func (S SSms) filter(channel string, mobile string) (bool, string) {
 	//过滤逻辑
 	return false, ""
 }
 
 func (S SSms) setCode(ctx context.Context, key string, val string) {
+	//考虑是否使用SETEX
 	_, _ = g.Redis().Do(ctx, "SET", key, val)
 }
