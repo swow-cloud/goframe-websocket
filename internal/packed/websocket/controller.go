@@ -3,14 +3,14 @@ package websocket
 import (
 	"github.com/gogf/gf/v2/os/gtime"
 	"github.com/gogf/gf/v2/util/gconv"
+	"goframe-websocket/internal/service"
 
 	"goframe-websocket/internal/model"
 )
 
 // LoginController  用户登录
 func LoginController(client *Client, req *model.WsRequest) {
-	//UserId := gconv.Uint64(service.BizCtx().Get(client.context).User.Id)
-	UserId := uint64(4)
+	UserId := gconv.Uint64(service.BizCtx().Get(client.context).User.Id)
 	login := &login{
 		UserId: UserId,
 		Client: client,
