@@ -15,7 +15,7 @@ const (
 	Join  = "join"
 	Quit  = "quit"
 	IsApp = "is_app"
-	Ping  = "ping"
+	Ping  = "heartbeat"
 )
 
 func Process(client *Client, message []byte) {
@@ -28,6 +28,7 @@ func Process(client *Client, message []byte) {
 	err := gconv.Struct(message, request)
 	if err != nil {
 		g.Log().Error(client.context, "数据解析失败 ", err)
+		return
 	}
 	switch request.Event {
 	case Login:

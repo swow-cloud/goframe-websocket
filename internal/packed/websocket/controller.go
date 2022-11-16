@@ -3,6 +3,7 @@ package websocket
 import (
 	"github.com/gogf/gf/v2/os/gtime"
 	"github.com/gogf/gf/v2/util/gconv"
+
 	"goframe-websocket/internal/service"
 
 	"goframe-websocket/internal/model"
@@ -52,4 +53,8 @@ func QuitController(client *Client, request *model.WsRequest) {
 func PingController(client *Client) {
 	currentTime := uint64(gtime.Now().Unix())
 	client.HeartBeat(currentTime)
+	client.SendMsg(&model.WsResponse{
+		Event:   Ping,
+		Content: "pong",
+	})
 }

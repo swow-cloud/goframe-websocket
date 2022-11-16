@@ -46,6 +46,7 @@ var (
 				})
 				// Special handler that needs authentication.
 				group.Group("/", func(group *ghttp.RouterGroup) {
+					group.Middleware(service.Middleware().Auth)
 					group.ALL("/ws", websocket.WsHandler)
 				})
 

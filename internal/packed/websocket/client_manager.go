@@ -139,12 +139,14 @@ func (manager *ClientManager) GetUsersLen() (userLen int) {
 
 // EventRegister 用户建立连接事件
 func (manager *ClientManager) EventRegister(client *Client) {
+	//UserId := gconv.Uint64(service.BizCtx().Get(client.context).User.Id)
 	manager.AddClients(client)
 	//发送当前客户端ID
 	client.SendMsg(&model.WsResponse{
-		Event: "connected",
+		Event: "connect",
 		Content: g.Map{
-			"ID": client.ID,
+			"ping_interval": 20,
+			"ping_timeout":  60,
 		},
 	})
 }

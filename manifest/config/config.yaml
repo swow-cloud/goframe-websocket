@@ -22,13 +22,13 @@ logger:
 
 database:
   default:
-    link: "mysql:root:vJ7mjEDAdc6WtKrAhXfv@tcp(162.14.100.112:3306)/chat"
+    link: "mysql:root:mysql@tcp(localhost:3306)/chat"
     debug: true
 
   # dao生成
 gen:
   dao:
-    - link: "mysql:root:vJ7mjEDAdc6WtKrAhXfv@tcp(162.14.100.112:3306)/chat"
+    - link: "mysql:root:mysql@tcp(localhost:3306)/chat"
       removePrefix: ""
       descriptionTag: true
       noModelComment: true
