@@ -174,7 +174,6 @@ func (manager *ClientManager) EventUnregister(client *Client) {
 
 // ClearTimeoutConnections 定时清理超时连接
 func (manager *ClientManager) ClearTimeoutConnections() {
-	//TODO 2022-10-07
 	currentTime := uint64(gtime.Now().Unix())
 	clients := clientManager.GetClients()
 	for client := range clients {
