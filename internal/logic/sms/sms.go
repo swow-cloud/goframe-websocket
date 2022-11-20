@@ -30,7 +30,7 @@ func (S SSms) Send(ctx context.Context, input model.SmsCodeInput) (*model.SmsSen
 	if code = S.GetCode(ctx, key); code == "" {
 		code = grand.Digits(6)
 	}
-	S.setCode(ctx, key, code)
+	S.SetCode(ctx, key, code, 60*10)
 	// ... 调取短信接口，建议异步任务执行 (暂无短信接口，省略处理)
 	res.Code = code
 	res.Type = input.Channel
@@ -44,8 +44,8 @@ func (S SSms) GetCode(ctx context.Context, key string) string {
 }
 
 func (S SSms) SetCode(ctx context.Context, key string, code string, exp uint) {
-	//TODO implement me
-	panic("implement me")
+	//考虑是否使用SETEX
+	_, _ = g.Redis().Do(ctx, "SET", key, code, exp)
 }
 
 func (S SSms) DelCode(ctx context.Context, channel string, key string) {
@@ -68,6 +68,5 @@ func (S SSms) filter(channel string, mobile string) (bool, string) {
 }
 
 func (S SSms) setCode(ctx context.Context, key string, val string) {
-	//考虑是否使用SETEX
-	_, _ = g.Redis().Do(ctx, "SET", key, val)
+
 }
