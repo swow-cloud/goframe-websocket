@@ -83,10 +83,12 @@ func IdentityHandler(ctx context.Context) interface{} {
 // Unauthorized is used to define customized Unauthorized callback function.
 func Unauthorized(ctx context.Context, code int, message string) {
 	r := g.RequestFromCtx(ctx)
-	r.Response.WriteJson(g.Map{
+	r.Response.Header().Set("Content-Type", "application/json")
+	r.Response.WriteStatusExit(code, g.Map{
 		"code":    code,
 		"message": message,
 	})
+
 	r.ExitAll()
 }
 

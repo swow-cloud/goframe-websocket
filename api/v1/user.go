@@ -5,7 +5,7 @@ import (
 )
 
 type UserGetInfoReq struct {
-	g.Meta `path:"/user/info" method:"get"`
+	g.Meta `path:"/info" method:"get"`
 }
 
 type UserGetInfoRes struct {

@@ -55,14 +55,16 @@ func (s *SMiddleware) Ctx(request *ghttp.Request) {
 func (s *SMiddleware) Auth(request *ghttp.Request) {
 	service.Auth().MiddlewareFunc()(request)
 	ctx := request.GetCtx()
+
 	id := gconv.Int(service.Auth().GetIdentity(ctx))
 	userInfo, err := service.User().GetUserInfo(ctx, uint(id))
+
 	if err != nil {
 		g.Log().Error(ctx, "用户不存在!")
 		request.Response.ClearBuffer()
 		request.Response.WriteJsonExit(response.JsonRes{
 			//todo 是否返回401
-			Code:    -1,
+			Code:    401,
 			Message: "用户不存在",
 		})
 	}
