@@ -8,8 +8,10 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/os/gcron"
 	"github.com/gogf/gf/v2/os/gtime"
+	"github.com/gogf/gf/v2/util/gconv"
 
 	"goframe-websocket/internal/model"
+	"goframe-websocket/internal/service"
 )
 
 // ClientManager 客户端管理
@@ -139,7 +141,7 @@ func (manager *ClientManager) GetUsersLen() (userLen int) {
 
 // EventRegister 用户建立连接事件
 func (manager *ClientManager) EventRegister(client *Client) {
-	//UserId := gconv.Uint64(service.BizCtx().Get(client.context).User.Id)
+
 	manager.AddClients(client)
 	//发送当前客户端ID
 	client.SendMsg(&model.WsResponse{
@@ -149,15 +151,21 @@ func (manager *ClientManager) EventRegister(client *Client) {
 			"ping_timeout":  60,
 		},
 	})
+
 }
 
 // EventLogin 用户登录
 func (manager *ClientManager) EventLogin(login *login) {
 	client := login.Client
+	UserId := gconv.Uint64(service.BizCtx().Get(client.context).User.Id)
 	if manager.InClient(client) {
 		userKey := login.GetKey()
 		manager.AddUsers(userKey, client)
 	}
+	g.Log().Notice(client.context, fmt.Sprintf("用户连接信息: user_id:{%d} 时间: %s", UserId, gtime.Now().Format("Y-m-d H:i:s")))
+	//todo 判断用户是否异地登录
+
+	//加入群聊
 }
 
 // EventUnregister 断开连接事件
