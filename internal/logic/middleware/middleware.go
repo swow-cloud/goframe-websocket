@@ -63,7 +63,6 @@ func (s *SMiddleware) Auth(request *ghttp.Request) {
 		g.Log().Error(ctx, "用户不存在!")
 		request.Response.ClearBuffer()
 		request.Response.WriteJsonExit(response.JsonRes{
-			//todo 是否返回401
 			Code:    401,
 			Message: "用户不存在",
 		})

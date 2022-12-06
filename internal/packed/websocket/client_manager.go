@@ -163,7 +163,7 @@ func (manager *ClientManager) EventLogin(login *login) {
 		manager.AddUsers(userKey, client)
 	}
 	g.Log().Notice(client.context, fmt.Sprintf("用户连接信息: user_id:{%d} 时间: %s", UserId, gtime.Now().Format("Y-m-d H:i:s")))
-	//todo 判断用户是否异地登录
+	//todo 判断用户是否异地登录 2022-12-06
 
 	//加入群聊
 }
